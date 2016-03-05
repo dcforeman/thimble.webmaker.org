@@ -5,7 +5,11 @@ define(function(require) {
   var analytics = require("analytics");
 
   function setupUserMenu() {
-    PopupMenu.create("#navbar-logged-in li", "#navbar-logged-in li ul.dropdown");
+    PopupMenu.create("#navbar-logged-in .dropdown-toggle", "#navbar-logged-in .dropdown-content");
+  }
+
+  function setupLocaleMenu() {
+    PopupMenu.create("#navbar-locale .dropdown-toggle", "#navbar-locale .dropdown-content");
   }
 
   function setupOptionsMenu(bramble) {
@@ -172,7 +176,7 @@ define(function(require) {
         basenamePrefix: "index",
         ext: ".html"
       };
-      downloadFileToFilesystem("/resources/default-files/html.txt", options, function(err) {
+      downloadFileToFilesystem("/default-files/html.txt", options, function(err) {
         if (err) {
           console.log("[Brackets] Failed to insert default HTML file", err);
         }
@@ -184,7 +188,7 @@ define(function(require) {
         basenamePrefix: "style",
         ext: ".css"
       };
-      downloadFileToFilesystem("/resources/default-files/css.txt", options, function(err) {
+      downloadFileToFilesystem("/default-files/css.txt", options, function(err) {
         if (err) {
           console.log("[Brackets] Failed to insert default CSS file", err);
         }
@@ -196,7 +200,7 @@ define(function(require) {
         basenamePrefix: "script",
         ext: ".js"
       };
-      downloadFileToFilesystem("/resources/default-files/js.txt", options, function(err) {
+      downloadFileToFilesystem("/default-files/js.txt", options, function(err) {
         if (err) {
           console.log("[Brackets] Failed to insert default JS file", err);
         }
@@ -236,6 +240,7 @@ define(function(require) {
     setupOptionsMenu(bramble);
     setupAddFileMenu(bramble);
     setupUserMenu();
+    setupLocaleMenu();
   }
 
   return {

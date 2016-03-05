@@ -1,5 +1,6 @@
 define(function(require) {
-  var Constants = require("constants");
+  var constants = require("constants");
+
   var Path = Bramble.Filer.Path;
   var Buffer = Bramble.Filer.Buffer;
   var fs = Bramble.getFileSystem();
@@ -57,7 +58,7 @@ define(function(require) {
       }
     }
 
-    untarWorker = new Worker("/resources/scripts/vendor/bitjs-untar-worker.min.js");
+    untarWorker = new Worker("/scripts/vendor/bitjs-untar-worker.min.js");
     untarWorker.addEventListener("message", function(e) {
       var data = e.data;
 
@@ -97,7 +98,7 @@ define(function(require) {
 
   function upgradeAnonymousProject(config, callback) {
     var shell = new fs.Shell();
-    var oldRoot = Path.join(Constants.ANONYMOUS_USER_FOLDER, config.anonymousId.toString());
+    var oldRoot = Path.join(constants.ANONYMOUS_USER_FOLDER, config.anonymousId.toString());
     var newRoot = config.root;
     var pathUpdatesCache = [];
 

@@ -1,4 +1,5 @@
 {% set locale = localeInfo.lang %}
+{% set localeDir = localeInfo.locale %}
 <!DOCTYPE html>
 <html lang="{{ locale }}" dir="{{ localeInfo.direction }}">
   <head>
@@ -11,7 +12,7 @@
     <title>{{ gettext("thimbleHeading") | safe }}</title>
 
     {% if GA_ACCOUNT %}
-    <script id="google-analytics-js" src="/homepage/scripts/google-analytics.js"
+    <script id="google-analytics-js" src="/{{ localeDir }}/homepage/scripts/google-analytics.js"
             data-ga-account="{{ GA_ACCOUNT }}"
             data-ga-domain="{{ GA_DOMAIN }}"
             async>
@@ -19,12 +20,14 @@
     {% endif %}
   </head>
 
-  <body>
+  <body class="homepage">
     {% include './userbar.html' %}
+
+    <script src="https://pontoon.mozilla.org/pontoon.js"></script>
 
     <script id="homepage-script"
         src="/scripts/vendor/require.min.js"
-        data-main="/homepage/scripts/main.js">
+        data-main="/{{ localeDir }}/homepage/scripts/main.js">
     </script>
 
     <section class="main-cta">
@@ -236,12 +239,12 @@
     <footer>
       <div class="content-wrapper">
         <ul class="social-links">
-          <li><a title="{{ gettext("contactEmail") }}" class="email" href="mailto:thimble@mozillafoundation.org"><span class="icon"></span>{{ gettext("contactEmail") }}</a></li>
-          <li><a title="{{ gettext("contactTwitterTitle") }}" class="twitter" href="https://twitter.com/mozteach"><span class="icon"></span>{{ gettext("contactTwitter") }}</a></li>
-          <li><a title="{{ gettext("readTheDocs") }}" class="help" href="https://support.mozilla.org/{{ locale }}/products/webmaker/thimble"><span class="icon"></span>{{ gettext("readTheDocs") }}</a></li>
-          <li><a title="{{ gettext("contributeTitle") }}" class="github" href="https://github.com/mozilla/thimble.webmaker.org"><span class="icon"></span>{{ gettext("contribute") }}</a></li>
-          <li><a title="{{ gettext("termsOfUse") }}" class="terms" href="https://beta.webmaker.org/#/legal"><span class="icon"></span>{{ gettext("termsOfUse") }}</a></li>
-          <li><a title="{{ gettext("privacyPolicy") }}" class="privacy" href="https://www.mozilla.org/{{ locale }}/privacy/websites/"><span class="icon"></span>{{ gettext("privacyPolicy") }}</a></li>
+          <li><a title="{{ gettext("contactEmail") }}" class="email" href="mailto:thimble@mozillafoundation.org"><span class="icon"></span><span>{{ gettext("contactEmail") }}</span></a></li>
+          <li><a title="{{ gettext("contactTwitterTitle") }}" class="twitter" href="https://twitter.com/mozteach"><span class="icon"></span><span>{{ gettext("contactTwitter") }}</span></a></li>
+          <li><a title="{{ gettext("readTheDocs") }}" class="help" href="https://support.mozilla.org/{{ locale }}/products/webmaker/thimble"><span class="icon"></span><span>{{ gettext("readTheDocs") }}</span></a></li>
+          <li><a title="{{ gettext("contributeTitle") }}" class="github" href="https://github.com/mozilla/thimble.mozilla.org"><span class="icon"></span><span>{{ gettext("contribute") }}</span></a></li>
+          <li><a title="{{ gettext("termsOfUse") }}" class="terms" href="https://beta.webmaker.org/#/legal"><span class="icon"></span><span>{{ gettext("termsOfUse") }}</span></a></li>
+          <li><a title="{{ gettext("privacyPolicy") }}" class="privacy" href="https://www.mozilla.org/{{ locale }}/privacy/websites/"><span class="icon"></span><span>{{ gettext("privacyPolicy") }}</span></a></li>
         </ul>
         <div class="project-info">
           <a class="mozilla-logo" title="Mozilla" href="https://www.mozilla.org/{{ locale }}"><img alt="Mozilla" src="/img/mozilla-logo.svg" /></a>

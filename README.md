@@ -8,10 +8,10 @@ staging server).
 
 ![Thimble](/screenshots/thimble.png?raw=true "Thimble")
 
-You can read more about some of Thimble's main features [in the wiki](https://github.com/mozilla/thimble.webmaker.org/wiki/Using-Thimble), or [watch a demo video](https://air.mozilla.org/thimble-demo/).
+You can read more about some of Thimble's main features [in the wiki](https://github.com/mozilla/thimble.mozilla.org/wiki/Using-Thimble), or [watch a demo video](https://air.mozilla.org/thimble-demo/).
 
 Thimble uses a modified version of the amazing [Brackets](http://brackets.io) code editor
-[updated to run within web browsers](https://github.com/humphd/brackets).  You can read more about
+[updated to run within web browsers](https://github.com/mozilla/brackets).  You can read more about
 how it works in [this blog post](http://blog.humphd.org/thimble-and-bramble/).
 
 Thimble requires a modern web browser, and we recommend using Mozilla Firefox or Google Chrome.
@@ -34,18 +34,17 @@ is an abbreviated guide to getting it all set up.  Please see each server's READ
 ## Installing the Parts
 
 **Bramble**
-* Fork and clone https://github.com/humphd/brackets
-* Make sure you're on the ``bramble`` branch
+* Fork and clone https://github.com/mozilla/brackets
 * Run ``git submodule update --init`` to install submodules
 * Run ``npm install`` to install dependencies
-* Run `grunt build-browser` to create `/dist` extensions and third-party libs
+* Run `npm run build` to create `/dist` extensions and third-party libs
 * Run ``npm start`` to get a static server running on [http://localhost:8000/src](http://localhost:8000/src). You can try the demo version at [http://localhost:8000/src/hosted.html](http://localhost:8000/src/hosted.html)
+* For more information on setting up Bramble, refer to [Bramble Setup](https://github.com/mozilla/brackets#how-to-setup-bramble-brackets-in-your-local-machine)
 
 **Thimble**
-* Fork and clone https://github.com/mozilla/thimble.webmaker.org
-* Make sure you're on the ``bramble`` branch
-* Run ``npm install`` to install dependencies
+* Fork and clone https://github.com/mozilla/thimble.mozilla.org
 * Run ``cp env.dist .env`` to create an environment file
+* Run ``npm install`` to install dependencies
 * Run ``npm run localize`` to generate the locale files
 * Run ``npm start`` to start the server
 * Once everything is ready and running, Thimble will be available at [http://localhost:3500/](http://localhost:3500/)
@@ -61,6 +60,7 @@ is an abbreviated guide to getting it all set up.  Please see each server's READ
 * Run ``npm install`` to install dependencies
 * Run ``cp env.sample .env`` to create an environment file
 * Run ``npm start`` the server
+* **Note:** login.webmaker.org needs a node version of 0.12 while all the other dependencies work with a node version of 4.x and above. We suggest installing [NVM](https://github.com/creationix/nvm) to allow the use of multiple versions of node.
 
 **PostgreSQL**
 * Install Postgres via Homebrew
@@ -149,9 +149,14 @@ Building the front-end
 Run `grunt requirejs:dist` to regenerate the front-end `dist/` folder if you so desire (it's
 only necessary in production). See `Gruntfile.js` for details.
 
-**NOTE:** Our front-end is in transition from an older architecture using Requirejs to
-a new one using our build system. Check in our IRC channel (irc.mozilla.org#thimble) for
-the latest state of development.
+Localization
+----------------------
+
+Please refer to the [Wiki](https://github.com/mozilla/thimble.mozilla.org/wiki/Localization) for information on the localization procedures used in Thimble.
+
+##### Our Localization Community
+
+[Our localization community](https://pontoon.mozilla.org/projects/thimble/contributors) is awesome! They work very hard to translate Thimble so that we can expand our global reach and engage even more users in other languages. We can't thank them enough!
 
 Invalidating CloudFront
 ----------------------

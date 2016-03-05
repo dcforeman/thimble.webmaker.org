@@ -12,23 +12,19 @@ let src = path.join(process.cwd(), development ? "public" : "dist");
 let dest = path.join(process.cwd(), development ? "client" : "dist");
 let localeDir = path.join(process.cwd(), env.get("L10N").locale_dest || "dist/locales");
 
-let templateEngine = new nunjucks.Environment(new nunjucks.FileSystemLoader(src));
 let locales = [];
 let strings = {
   "en_US": require(path.join(localeDir, "en_US", "messages.json"))
 };
+strings.en_US.locale = "en_US";
 
-function makeLocalizedCopy(locale, srcPath, isJS, template) {
+function makeLocalizedCopy(locale, srcPath, template) {
   let destPath = path.join(dest, locale, path.relative(src, srcPath));
 
   return fs.makeTree(path.dirname(destPath))
   .then(() => {
-    if(!isJS) {
-      return fs.copy(srcPath, destPath);
-    }
-
     return new Promise((resolve, reject) => {
-      template.render(strings[locale], function(err, localizedContent) {
+      template.render(srcPath, strings[locale], (err, localizedContent) => {
         if(err) {
           reject(err);
           return;
@@ -41,6 +37,17 @@ function makeLocalizedCopy(locale, srcPath, isJS, template) {
   });
 }
 
+function localizeFile(filePath) {
+  let isJS = path.extname(filePath) === ".js";
+  if(!isJS) {
+    return Promise.resolve();
+  }
+
+  let template = nunjucks.configure(filePath, { noCache: true });
+
+  return Promise.all(locales.map(locale => makeLocalizedCopy(locale, filePath, template)));
+}
+
 function localizeClientFiles() {
   return fs.listTree(src)
   .then(nodePaths => Promise.all(nodePaths.map(nodePath => {
@@ -50,13 +57,7 @@ function localizeClientFiles() {
         return;
       }
 
-      let isJS = path.extname(nodePath) === ".js";
-      let template;
-      if(isJS) {
-        template = templateEngine.getTemplate(path.relative(src, nodePath));
-      }
-
-      return Promise.all(locales.map(locale => makeLocalizedCopy(locale, nodePath, isJS, template)));
+      return localizeFile(nodePath);
     });
   })));
 }
@@ -86,21 +87,30 @@ function cleanupOldClient() {
 }
 
 function readLocaleStrings(localeList) {
-  let en_USlocalizedStrings = strings["en_US"];
   locales = JSON.parse(JSON.stringify(localeList));
   localeList.splice(localeList.indexOf("en_US"), 1);
 
   localeList.forEach(locale => {
     let localizedStrings = require(path.join(localeDir, locale, "messages.json"));
+    localizedStrings.locale = locale;
 
-    strings[locale] = Object.assign(localizedStrings, en_USlocalizedStrings);
+    strings[locale] = Object.assign(JSON.parse(JSON.stringify(strings["en_US"])), localizedStrings);
   });
 }
 
-getListLocales(localeDir)
-.then(readLocaleStrings)
-.then(cleanupOldClient)
-.then(createClientLocaleDirectories)
-.then(localizeClientFiles)
-.then(() => console.log("Successfully localized the client at: ", dest))
-.catch((err) => console.error("Failed to generate localized client with: ", err));
+if(require.main === module) {
+  getListLocales(localeDir)
+  .then(readLocaleStrings)
+  .then(cleanupOldClient)
+  .then(createClientLocaleDirectories)
+  .then(localizeClientFiles)
+  .then(() => console.log("Successfully localized the client at: ", dest))
+  .catch((err) => console.error("Failed to generate localized client with: ", err));
+}
+
+module.exports = {
+  readLocaleStrings,
+  localizeClientFiles,
+  localizeFile,
+  makeLocalizedCopy
+};

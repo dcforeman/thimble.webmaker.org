@@ -15,14 +15,14 @@ let localize = require("./localize");
 let errorhandling = require("./lib/errorhandling");
 let middleware = require("./lib/middleware")();
 let routes = require("./routes")();
+let getFileList = require("./lib/utils").getFileList;
 
 let server = express();
 let isDevelopment = env.get("NODE_ENV") === "development";
 let root = path.dirname(__dirname);
-let client = path.join(root, isDevelopment ? "public" : "dist");
+let client = path.join(root, isDevelopment ? "client" : "dist");
 let cssAssets = path.join(require("os").tmpDir(), "mozilla.webmaker.org");
 const maxCacheAge = { maxAge: "1d" };
-
 
 /*
  * Local server variables
@@ -90,16 +90,23 @@ if(!!env.get("FORCE_SSL")) {
 /**
  * Static assets
  */
-server.use("/", express.static(client, maxCacheAge));
+getFileList(path.join(root, "public"), "!(*.js)")
+.forEach(file => server.use(express.static(file, maxCacheAge)));
+server.use(express.static(client, maxCacheAge));
 server.use(express.static(cssAssets, maxCacheAge));
 server.use(express.static(path.join(root, "public/resources"), maxCacheAge));
+// So that we don't break compatibility with existing published projects,
+// we serve the remix resources through this route as well
+server.use("/resources/remix", express.static(path.join(root, "public/resources/remix"), maxCacheAge));
 server.use("/bower", express.static(path.join(root, server.locals.bower_path), maxCacheAge));
 
 
 /**
  * L10N
  */
-localize(server, env.get("L10N"));
+localize(server, Object.assign(env.get("L10N"), {
+   excludeLocaleInUrl: [ "/projects/remix-bar" ]
+}));
 
 
 /**
